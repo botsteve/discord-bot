@@ -1,0 +1,8 @@
+{
+    "voice_channel_error": "You need to be in a voice channel to play music!",
+    "channel_permissions_error": "I need the permissions to join and speak in your voice channel!",
+    "no_song_in_queue_error": "There is no song that I could skip!",
+    "user_not_in_voice_channel": "You have to be in a voice channel to stop the music!",
+    "reconnecting": "Reconnecting!",
+    "disconnect": "Disconnect!"
+}
