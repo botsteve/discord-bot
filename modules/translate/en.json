@@ -2,7 +2,7 @@
     "voice_channel_error": "You need to be in a voice channel to play music!",
     "channel_permissions_error": "I need the permissions to join and speak in your voice channel!",
     "no_song_in_queue_error": "There is no song that I could skip!",
-    "playlist_number_error": "You must provide a valid playlist number!",
+    "playlist_number_error": "You must provide a valid playlist/song number!",
     "empty_queue_error": "The queue is empty!",
     "user_not_in_voice_channel": "You have to be in a voice channel to stop the music!",
     "no_song_is_currently_playing": "No song is currently playing!",
@@ -42,5 +42,7 @@
     "help_pause_label": "__stiv help__",
     "help_pause_value": "Used to pause the current song ",
     "help_add_song_label": "__stiv playlist-add <url> <playlist_number>__",
-    "help_add_song_value": "Used to add a song to a certain playlist"
+    "help_add_song_value": "Used to add a song to a certain playlist",
+    "help_remove_song_label": "__stiv playlist-remove <playlis> <playlist_number>__",
+    "help_remove_song_value": "Used to add a song to a certain playlist"
 }

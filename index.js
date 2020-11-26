@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const { prefix, assistantWatsonId, discordToken } = require('./config.json');
-const { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addSongToPlaylist } = require('./modules/music/commands');
+const { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addSongToPlaylist, removeSongFromPlaylist } = require('./modules/music/commands');
 const translate = require('./modules/translate/en.json');
 const { authWatsonAndGetService, callAssistant } = require('./modules/watson/watson');
 
@@ -70,6 +70,10 @@ client.on('message', async (msg) => {
 		else if(msg.content.startsWith(`${prefix}playlist-add`)) {
 			console.log('playlist-add');
 			addSongToPlaylist(playlists, msg);
+		}
+		else if(msg.content.startsWith(`${prefix}playlist-remove`)) {
+			console.log('playlist-remove');
+			removeSongFromPlaylist(playlists, msg);
 		}
 		else if(msg.content.startsWith(`${prefix}queue`)) {
 			console.log('display-queue');

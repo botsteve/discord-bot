@@ -8,6 +8,19 @@ function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
 }
 
+const removeSongFromPlaylist = async function removeSongFromPlaylist(playlists, message) {
+	const songNumber = message.content.split(' ')[3];
+	const playlistNumber = message.content.split(' ')[2];
+
+	if(playlists && playlistNumber <= playlists.length && !isNaN(playlistNumber) && !isNaN(songNumber) && songNumber <= playlists[playlistNumber].songs.length) {
+		message.channel.send(`Finished removing the song number ${playlists[playlistNumber].songs[songNumber].title} from the playlist ${playlists[playlistNumber].playlistName}`);
+		playlists[playlistNumber].songs.splice(playlistNumber);
+		await openFileAndWrite(JSON.stringify(playlists, null, 2));
+	}else{
+		message.channel.send(translate.playlist_number_error);
+	}
+};
+
 const addSongToPlaylist = async function addSongToPlaylist(playlists, message) {
 	const url = message.content.split(' ')[2];
 	const playlistNumber = message.content.split(' ')[3];
@@ -71,6 +84,7 @@ const displayHelp = function displayHelp(message) {
 		.addField(translate.help_playlists_label, translate.help_playlists_value)
 		.addField(translate.help_playlists_number_label, translate.help_playlists_number_value)
 		.addField(translate.help_add_song_label, translate.help_add_song_value)
+		.addField(translate.help_remove_song_label, translate.help_remove_song_value)
 		.addField(translate.help_queue_label, translate.help_queue_value)
 		.addField(translate.help_resume_label, translate.help_resume_value)
 		.addField(translate.help_pause_label, translate.help_pause_value)
@@ -316,4 +330,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist };
