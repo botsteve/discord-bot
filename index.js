@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const { prefix, assistantWatsonId, discordToken } = require('./config.json');
-const { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp } = require('./modules/music/commands');
+const { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addSongToPlaylist } = require('./modules/music/commands');
 const translate = require('./modules/translate/en.json');
 const { authWatsonAndGetService, callAssistant } = require('./modules/watson/watson');
 
@@ -67,6 +67,10 @@ client.on('message', async (msg) => {
 			console.log('display-playlists');
 			await displayPlaylists(playlists, msg);
 		}
+		else if(msg.content.startsWith(`${prefix}playlist-add`)) {
+			console.log('playlist-add');
+			addSongToPlaylist(playlists, msg);
+		}
 		else if(msg.content.startsWith(`${prefix}queue`)) {
 			console.log('display-queue');
 			displayQueue(queue, msg);
@@ -74,6 +78,14 @@ client.on('message', async (msg) => {
 		else if(msg.content.startsWith(`${prefix}help`)) {
 			console.log('help');
 			displayHelp(msg);
+		}
+		else if(msg.content.startsWith(`${prefix}pause`)) {
+			console.log('pause');
+			pauseSong(queue, msg);
+		}
+		else if(msg.content.startsWith(`${prefix}resume`)) {
+			console.log('resume');
+			resumeSong(queue, msg);
 		}
 		else {
 			console.log('assistant');

@@ -2,10 +2,59 @@ const ytdl = require('ytdl-core');
 const translate = require('../translate/en.json');
 const savedPlaylists = require('../playlists/playlists.json');
 const Discord = require('discord.js');
+const fs = require('fs').promises;
 
 function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
 }
+
+const addSongToPlaylist = async function addSongToPlaylist(playlists, message) {
+	const url = message.content.split(' ')[2];
+	const playlistNumber = message.content.split(' ')[3];
+	const songInfo = await ytdl.getInfo(url);
+
+	const song = {
+		title: songInfo.videoDetails.title,
+		url: songInfo.videoDetails.video_url,
+	};
+
+	if(playlists && playlistNumber <= playlists.length || !isNaN(playlistNumber)) {
+		message.channel.send(`Finished adding the song to the playlist ${playlists[playlistNumber].playlistName}`);
+		playlists[playlistNumber].songs.push(song);
+		await openFileAndWrite(JSON.stringify(playlists, null, 2));
+	}
+};
+
+async function openFileAndWrite(content) {
+	try {
+		await fs.writeFile('./modules/playlists/playlists.json', content);
+	}
+	catch (error) {
+		console.error(`Got an error trying to write to a file: ${error.message}`);
+	}
+}
+
+const pauseSong = function pauseSong(queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+	if(serverSongQueue) {
+		serverSongQueue.connection.dispatcher.pause();
+		message.channel.send(translate.pause);
+	}
+	else{
+		message.channel.send(translate.no_song);
+	}
+};
+
+const resumeSong = function resumeSong(queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+	if(serverSongQueue) {
+		serverSongQueue.connection.dispatcher.resume();
+		message.channel.send(translate.resume);
+	}
+	else{
+		message.channel.send(translate.no_song);
+	}
+};
 
 const displayHelp = function displayHelp(message) {
 	const helpMessage = new Discord.MessageEmbed()
@@ -21,7 +70,10 @@ const displayHelp = function displayHelp(message) {
 		.addField(translate.help_change_volume_label, translate.help_change_volume_value)
 		.addField(translate.help_playlists_label, translate.help_playlists_value)
 		.addField(translate.help_playlists_number_label, translate.help_playlists_number_value)
+		.addField(translate.help_add_song_label, translate.help_add_song_value)
 		.addField(translate.help_queue_label, translate.help_queue_value)
+		.addField(translate.help_resume_label, translate.help_resume_value)
+		.addField(translate.help_pause_label, translate.help_pause_value)
 		.addField(translate.help_help_label, translate.help_help_value);
 
 	return message.channel.send(helpMessage);
@@ -95,23 +147,31 @@ const playPlaylist = async function playPlaylist(playlists, queue, message) {
 		}
 	}
 	else{
-		message.channel.send(translate.changing_playlist);
-		serverSongQueue.songs = playlists[playlistNumber].songs;
-		serverSongQueue.connection.dispatcher.end();
+		if(playlistNumber <= playlists.length || !isNaN(playlistNumber)) {
+			message.channel.send(translate.changing_playlist);
+			serverSongQueue.songs = [...playlists[playlistNumber].songs];
+			await play(queue, message.guild, serverSongQueue.songs[0]);
+		}
+		else{
+			message.channel.send(translate.invalid_playlist_number);
+		}
+		console.log(serverSongQueue.songs);
 	}
 };
 
 const obtainPlaylists = async function obtainPlaylists() {
 	const playlists = savedPlaylists;
-	for(let i = 0;i < playlists.playlists.length;i++) {
-		for(let j = 0;j < playlists.playlists[i].songs.length;j++) {
-			const song = playlists.playlists[i].songs[j];
-			const songInfo = await ytdl.getInfo(song.url);
-			playlists.playlists[i].songs[j].title = songInfo.videoDetails.title;
+	if(playlists) {
+		for(let i = 0;i < playlists.length;i++) {
+			for(let j = 0;j < playlists[i].songs.length;j++) {
+				const song = playlists[i].songs[j];
+				const songInfo = await ytdl.getInfo(song.url);
+				playlists[i].songs[j].title = songInfo.videoDetails.title;
+			}
 		}
 	}
 
-	return playlists.playlists;
+	return playlists;
 };
 
 const displayPlaylists = async function displayPlaylists(playlists, message) {
@@ -130,7 +190,7 @@ async function parsePlaylists(playlists, serverMessage) {
 	}
 	else{
 		for(let i = 0;i < playlists.length;i++) {
-			message.addField(`__**${playlists[i].playlistName}**__`, '\u200b', true);
+			message.addField(`[${[i]}].__**${playlists[i].playlistName}**__`, '\u200b', true);
 			for(let j = 0;j < playlists[i].songs.length;j++) {
 				message.addField(`\t [${[j]}].**${playlists[i].songs[j].title}**`, `${playlists[i].songs[j].url}`);
 			}
@@ -256,4 +316,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist };

@@ -1,54 +1,89 @@
-{
-    "playlists" : [
-        {
-            "playlistName": "Stefan",
-            "songs" : [
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=I84yiDajn9s"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=tXO2QtjixaM"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=-sgjlX2M1wo"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=zX8-4H89Qzw"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=MUhxQ8dEr-w"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=MUhxQ8dEr-w"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=XTKKj0CX3yQ"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=uWb2ZZzDBFw"
-                }
-            ]
-        },
-        {
-            "playlistName": "Cosmin",
-            "songs" : [
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=I84yiDajn9s"
-                },
-                {
-                    "title": "",
-                    "url": "https://www.youtube.com/watch?v=uWb2ZZzDBFw"
-                }
-            ]
-        }
+[
+  {
+    "playlistName": "Stefan",
+    "songs": [
+      {
+        "title": "Nicolae Guta - Eu sunt capitanul",
+        "url": "https://www.youtube.com/watch?v=I84yiDajn9s"
+      },
+      {
+        "title": "Florin Salam - Saint Tropez [official video]",
+        "url": "https://www.youtube.com/watch?v=tXO2QtjixaM"
+      },
+      {
+        "title": "LIVIU GUTA & SUSANU - vreau sa beau cu fratii mei",
+        "url": "https://www.youtube.com/watch?v=-sgjlX2M1wo"
+      },
+      {
+        "title": "ADRIAN MINUNE - Asa sunt zilele mele (cea mai tare manea - HIT)",
+        "url": "https://www.youtube.com/watch?v=zX8-4H89Qzw"
+      },
+      {
+        "title": "Fantastick - Carolina",
+        "url": "https://www.youtube.com/watch?v=MUhxQ8dEr-w"
+      },
+      {
+        "title": "Fantastick - Carolina",
+        "url": "https://www.youtube.com/watch?v=MUhxQ8dEr-w"
+      },
+      {
+        "title": "Adrian Copilul Minune - Chef de chef",
+        "url": "https://www.youtube.com/watch?v=XTKKj0CX3yQ"
+      },
+      {
+        "title": "Nicolae Guta - Baterie baterie foc -  manele vechi",
+        "url": "https://www.youtube.com/watch?v=uWb2ZZzDBFw"
+      }
     ]
-}
+  },
+  {
+    "playlistName": "Cosmin",
+    "songs": [
+      {
+        "title": "Nicolae Guta - Eu sunt capitanul",
+        "url": "https://www.youtube.com/watch?v=I84yiDajn9s"
+      },
+      {
+        "title": "Nicolae Guta - Baterie baterie foc -  manele vechi",
+        "url": "https://www.youtube.com/watch?v=uWb2ZZzDBFw"
+      }
+    ]
+  },
+  {
+    "playlistName": "Vlad",
+    "songs": [
+      {
+        "title": "Reaping",
+        "url": "https://www.youtube.com/watch?v=5BgPY7LJJOo"
+      },
+      {
+        "title": "So Long, And Thanks For All The Fish",
+        "url": "https://www.youtube.com/watch?v=9TQ4nKWi0lQ"
+      },
+      {
+        "title": "Post Malone - Heart Shaped Box (Nirvana Tribute Cover)",
+        "url": "https://www.youtube.com/watch?v=-cGxzWYWLyQ"
+      },
+      {
+        "title": "PUP - Reservoir",
+        "url": "https://www.youtube.com/watch?v=kKAov9a_Tm4"
+      },
+      {
+        "title": "Boots",
+        "url": "https://www.youtube.com/watch?v=uqBpRI2n3Lc"
+      },
+      {
+        "title": "Wire - Map Ref. 41°N 93°W",
+        "url": "https://www.youtube.com/watch?v=XZ2RvSHK_B8"
+      },
+      {
+        "title": "Zero Talent - Nuits Blanches / SKA PUNK",
+        "url": "https://www.youtube.com/watch?v=zQP3URFrfWE"
+      },
+      {
+        "title": "Zero Talent - Nuits Blanches / SKA PUNK",
+        "url": "https://www.youtube.com/watch?v=zQP3URFrfWE"
+      }
+    ]
+  }
+]

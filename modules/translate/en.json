@@ -8,7 +8,11 @@
     "no_song_is_currently_playing": "No song is currently playing!",
     "wait_for_load": "Waiting for BOT to finish bootstraping files. Please Wait!",
     "bootstraping_completed": "Bootstraping is completed",
-    "changing_playlist": "Changing playlist",
+    "changing_playlist": "Changing playlist!",
+    "invalid_playlist_number": "Invalid playlist number!",
+    "pause": "The current song has been pause!",
+    "resume": "The current song has been resumed!",
+    "no_song": "No song is currently playing",
     "reconnecting": "Reconnecting!",
     "disconnect": "Disconnect!",
     "help_description": "__***BEWARE OF THE TRAILING SPACES!***__",
@@ -32,5 +36,11 @@
     "help_queue_label": "__stiv queue__",
     "help_queue_value": "Used display the queue",
     "help_help_label": "__stiv help__",
-    "help_help_value": "Used to view available commands"
+    "help_help_value": "Used to view available commands",
+    "help_resume_label": "__stiv resume__",
+    "help_resume_value": "Used to resume the current song in the queue",
+    "help_pause_label": "__stiv help__",
+    "help_pause_value": "Used to pause the current song ",
+    "help_add_song_label": "__stiv playlist-add <url> <playlist_number>__",
+    "help_add_song_value": "Used to add a song to a certain playlist"
 }
