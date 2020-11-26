@@ -1,3 +1,7 @@
+const AssistantV2 = require('ibm-watson/assistant/v2');
+const { IamAuthenticator } = require('ibm-watson/auth');
+const { apikey, apiUrl, assistantApiVersion } = require('../../config.json');
+
 async function getMessage(request, sessionId, assistantId, assistant) {
 	try {
 		const param = {
@@ -32,4 +36,26 @@ const callAssistant = async function callAssistant(request, assistant, assistant
 	}
 };
 
-module.exports = callAssistant ;
+const authWatsonAndGetService = function authWatsonAndGetService(assistantWatsonId) {
+	let assistant = null;
+	if (assistantWatsonId) {
+		let auth;
+		try {
+			auth = new IamAuthenticator({ apikey: apikey });
+		}
+		catch (e) {
+			console.log(e.result.stringify);
+		}
+
+		assistant = new AssistantV2({
+			version: assistantApiVersion,
+			authenticator: auth,
+			url: apiUrl,
+			disableSslVerification: false,
+		});
+		return assistant;
+	}
+
+};
+
+module.exports = { callAssistant, authWatsonAndGetService };

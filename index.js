@@ -1,33 +1,15 @@
 const Discord = require('discord.js');
-const client = new Discord.Client();
-const AssistantV2 = require('ibm-watson/assistant/v2');
-const { IamAuthenticator } = require('ibm-watson/auth');
-const { prefix, assistantWatsonId, apikey, apiUrl, discordToken, assistantApiVersion } = require('./config.json');
+const { prefix, assistantWatsonId, discordToken } = require('./config.json');
 const { execute, skip, stop } = require('./modules/music/commands');
 const translate = require('./modules/translate/en.json');
-const callAssistant = require('./modules/watson/watson');
+const { authWatsonAndGetService, callAssistant } = require('./modules/watson/watson');
 
 let assistant = null;
 const queue = new Map();
+const client = new Discord.Client();
 const regexPrefix = new RegExp('stiv*');
 
-
-if (assistantWatsonId) {
-	let auth;
-	try {
-		auth = new IamAuthenticator({ apikey: apikey });
-	}
-	catch (e) {
-		console.log(e.result.stringify);
-	}
-
-	assistant = new AssistantV2({
-		version: assistantApiVersion,
-		authenticator: auth,
-		url: apiUrl,
-		disableSslVerification: false,
-	});
-}
+assistant = authWatsonAndGetService(assistantWatsonId);
 
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
