@@ -7,6 +7,26 @@ function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
 }
 
+const displayHelp = function displayHelp(message) {
+	const helpMessage = new Discord.MessageEmbed()
+		.setColor('#ff0000')
+		.setTitle('HELP')
+		.setDescription(translate.help_description)
+		.addField(translate.help_disclaimer, '\u200b')
+		.addField(translate.help_play_label, translate.help_play_value)
+		.addField(translate.help_stop_label, translate.help_stop_value)
+		.addField(translate.help_skip_label, translate.help_skip_value)
+		.addField(translate.help_current_song_label, translate.help_current_song_value)
+		.addField(translate.help_current_volume_label, translate.help_current_volume_value)
+		.addField(translate.help_change_volume_label, translate.help_change_volume_value)
+		.addField(translate.help_playlists_label, translate.help_playlists_value)
+		.addField(translate.help_playlists_number_label, translate.help_playlists_number_value)
+		.addField(translate.help_queue_label, translate.help_queue_value)
+		.addField(translate.help_help_label, translate.help_help_value);
+
+	return message.channel.send(helpMessage);
+};
+
 const displayQueue = function displayQueue(queue, message) {
 	const serverSongQueue = queue.get(message.guild.id);
 
@@ -236,4 +256,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp };
