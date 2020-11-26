@@ -14,9 +14,10 @@ const removeSongFromPlaylist = async function removeSongFromPlaylist(playlists, 
 
 	if(playlists && playlistNumber <= playlists.length && !isNaN(playlistNumber) && !isNaN(songNumber) && songNumber <= playlists[playlistNumber].songs.length) {
 		message.channel.send(`Finished removing the song number ${playlists[playlistNumber].songs[songNumber].title} from the playlist ${playlists[playlistNumber].playlistName}`);
-		playlists[playlistNumber].songs.splice(playlistNumber);
+		playlists[playlistNumber].songs.splice(songNumber, 1);
 		await openFileAndWrite(JSON.stringify(playlists, null, 2));
-	}else{
+	}
+	else{
 		message.channel.send(translate.playlist_number_error);
 	}
 };
