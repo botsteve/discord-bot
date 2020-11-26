@@ -1,8 +1,123 @@
 const ytdl = require('ytdl-core');
 const translate = require('../translate/en.json');
+const savedPlaylists = require('../playlists/playlists.json');
+const Discord = require('discord.js');
 
 function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
+}
+
+const displayQueue = function displayQueue(queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+
+	if(!serverSongQueue) {
+		return message.channel.send(translate.empty_queue_error);
+	}
+	else {
+		const queueMessage = getMessageQueue(serverSongQueue);
+		return message.channel.send(queueMessage);
+	}
+};
+
+
+function getMessageQueue(serverSongQueue) {
+	const message = new Discord.MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle('QUEUE');
+
+	for(let i = 0;i < serverSongQueue.songs.length;i++) {
+		const songTitle = serverSongQueue.songs[i].title.trim();
+		const songUrl = serverSongQueue.songs[i].url.trim();
+		if(songTitle != undefined) {
+			message.addField(`${i}. ***${songTitle}***`, `__${songUrl}__`);
+		}
+	}
+	return message;
+}
+
+const playPlaylist = async function playPlaylist(playlists, queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+	const playlistNumber = message.content.split(' ')[2];
+	const voiceChannel = message.member.voice.channel;
+
+	if (!voiceChannel) {
+		return message.channel.send(translate.voice_channel_error);
+	}
+
+	const permissions = voiceChannel.permissionsFor(message.client.user);
+	if (hasPermissionToJoinOrSpeak(permissions)) {
+		return message.channel.send(translate.channel_permissions_error);
+	}
+
+	if(playlistNumber == null || playlistNumber == undefined) {
+		return message.channel.send(translate.playlist_number_error);
+	}
+
+	if (!serverSongQueue) {
+		const queueContruct = {
+			textChannel: message.channel,
+			voiceChannel: voiceChannel,
+			connection: null,
+			songs: playlists[playlistNumber].songs,
+			volume: 5,
+			playing: true,
+		};
+		queue.set(message.guild.id, queueContruct);
+		try {
+			const connection = await voiceChannel.join();
+			queueContruct.connection = connection;
+			play(queue, message.guild, queueContruct.songs[0]);
+		}
+		catch (err) {
+			console.log(err);
+			queue.delete(message.guild.id);
+			return message.channel.send(err);
+		}
+	}
+	else{
+		message.channel.send(translate.changing_playlist);
+		serverSongQueue.songs = playlists[playlistNumber].songs;
+		serverSongQueue.connection.dispatcher.end();
+	}
+};
+
+const obtainPlaylists = async function obtainPlaylists() {
+	const playlists = savedPlaylists;
+	for(let i = 0;i < playlists.playlists.length;i++) {
+		for(let j = 0;j < playlists.playlists[i].songs.length;j++) {
+			const song = playlists.playlists[i].songs[j];
+			const songInfo = await ytdl.getInfo(song.url);
+			playlists.playlists[i].songs[j].title = songInfo.videoDetails.title;
+		}
+	}
+
+	return playlists.playlists;
+};
+
+const displayPlaylists = async function displayPlaylists(playlists, message) {
+	const channelMessage = await parsePlaylists(playlists, message);
+	if(channelMessage) {
+		return message.channel.send(channelMessage);
+	}
+};
+
+async function parsePlaylists(playlists, serverMessage) {
+	const message = new Discord.MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle('PLAYLISTS');
+	if(!playlists) {
+		serverMessage.channel.send(translate.wait_for_load);
+	}
+	else{
+		for(let i = 0;i < playlists.length;i++) {
+			message.addField(`__**${playlists[i].playlistName}**__`, '\u200b', true);
+			for(let j = 0;j < playlists[i].songs.length;j++) {
+				message.addField(`\t [${[j]}].**${playlists[i].songs[j].title}**`, `${playlists[i].songs[j].url}`);
+			}
+			message.addField('\u200b', '\u200b');
+		}
+		return message;
+	}
 }
 
 const execute = async function execute(queue, message, serverSongQueue) {
@@ -30,7 +145,7 @@ const execute = async function execute(queue, message, serverSongQueue) {
 			voiceChannel: voiceChannel,
 			connection: null,
 			songs: [],
-			volume: 4,
+			volume: 5,
 			playing: true,
 		};
 		queue.set(message.guild.id, queueContruct);
@@ -49,6 +164,41 @@ const execute = async function execute(queue, message, serverSongQueue) {
 	else {
 		serverSongQueue.songs.push(song);
 		return message.channel.send(`${song.title} has been added to the queue!`);
+	}
+};
+
+const currentSong = function currentSong(queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+	if(serverSongQueue && serverSongQueue.songs) {
+		const currentPlayingSong = serverSongQueue.songs[0];
+		return message.channel.send(`${currentPlayingSong.title} is currently playing!`);
+	}
+	else{
+		return message.channel.send(translate.no_song_is_currently_playing);
+	}
+};
+
+const currentVolume = function currentVolume(queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+	if(serverSongQueue && serverSongQueue.songs) {
+		const currentSongVolume = serverSongQueue.volume;
+		return message.channel.send(`The current volume is set at : ${currentSongVolume} !`);
+	}
+	else{
+		return message.channel.send(translate.no_song_is_currently_playing);
+	}
+};
+
+const changeVolume = function increaseVolume(queue, message) {
+	const newVolume = message.content.split(' ')[2];
+	const serverSongQueue = queue.get(message.guild.id);
+	if(serverSongQueue && serverSongQueue.songs) {
+		serverSongQueue.volume = newVolume;
+		serverSongQueue.connection.dispatcher.setVolumeLogarithmic(serverSongQueue.volume / 5);
+		return message.channel.send(`The new volume is now set at : ${serverSongQueue.volume} !`);
+	}
+	else{
+		return message.channel.send(translate.no_song_is_currently_playing);
 	}
 };
 
@@ -86,4 +236,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue };

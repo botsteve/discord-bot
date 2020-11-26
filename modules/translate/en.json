@@ -2,7 +2,13 @@
     "voice_channel_error": "You need to be in a voice channel to play music!",
     "channel_permissions_error": "I need the permissions to join and speak in your voice channel!",
     "no_song_in_queue_error": "There is no song that I could skip!",
+    "playlist_number_error": "You must provide a valid playlist number!",
+    "empty_queue_error": "The queue is empty!",
     "user_not_in_voice_channel": "You have to be in a voice channel to stop the music!",
+    "no_song_is_currently_playing": "No song is currently playing!",
+    "wait_for_load": "Waiting for BOT to finish bootstraping files. Please Wait!",
+    "bootstraping_completed": "Bootstraping is completed",
+    "changing_playlist": "Changing playlist",
     "reconnecting": "Reconnecting!",
     "disconnect": "Disconnect!"
 }

@@ -1,0 +1,54 @@
+{
+    "playlists" : [
+        {
+            "playlistName": "Stefan",
+            "songs" : [
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=I84yiDajn9s"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=tXO2QtjixaM"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=-sgjlX2M1wo"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=zX8-4H89Qzw"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=MUhxQ8dEr-w"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=MUhxQ8dEr-w"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=XTKKj0CX3yQ"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=uWb2ZZzDBFw"
+                }
+            ]
+        },
+        {
+            "playlistName": "Cosmin",
+            "songs" : [
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=I84yiDajn9s"
+                },
+                {
+                    "title": "",
+                    "url": "https://www.youtube.com/watch?v=uWb2ZZzDBFw"
+                }
+            ]
+        }
+    ]
+}
