@@ -3,9 +3,30 @@ const translate = require('../translate/en.json');
 const savedPlaylists = require('../playlists/playlists.json');
 const Discord = require('discord.js');
 const fs = require('fs').promises;
+const usetube = require('usetube');
 
 function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
+}
+
+async function searchUrlByName(message) {
+	const songName = message.content.substring(10);
+	if(message.content) {
+		const results = await usetube.searchVideo(songName);
+		return await parseUrlFromResults(results);
+	}
+	else{
+		return message.channel.send(translate.no_song_found);
+	}
+
+}
+
+async function parseUrlFromResults(videos) {
+	let url = '';
+	if(videos.tracks.length) {
+		url = `https://www.youtube.com/watch?v=${videos.tracks[0].id}`;
+	}
+	return url;
 }
 
 
@@ -237,8 +258,9 @@ async function parsePlaylists(playlists, serverMessage) {
 	}
 }
 
-const execute = async function execute(queue, message, serverSongQueue) {
+const execute = async function execute(queue, message, serverSongQueue, playByName) {
 	const songUrl = message.content.split(' ')[2];
+	let songInfo;
 
 	const voiceChannel = message.member.voice.channel;
 	if (!voiceChannel) {
@@ -250,7 +272,16 @@ const execute = async function execute(queue, message, serverSongQueue) {
 		return message.channel.send(translate.channel_permissions_error);
 	}
 
-	const songInfo = await ytdl.getInfo(songUrl);
+
+	if(!playByName) {
+		songInfo = await ytdl.getInfo(songUrl);
+	}
+	else {
+		const url = await searchUrlByName(message);
+		if(!url) message.channel.send(translate.no_song_found);
+		songInfo = await ytdl.getInfo(url);
+	}
+
 	const song = {
 		title: songInfo.videoDetails.title,
 		url: songInfo.videoDetails.video_url,

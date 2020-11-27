@@ -10,6 +10,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "fs": "^0.0.1-security",
     "ibm-watson": "^5.7.1",
+    "usetube": "^1.1.5",
     "ytdl-core": "^4.1.0"
   },
   "devDependencies": {},

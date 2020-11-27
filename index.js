@@ -8,6 +8,7 @@ const queue = new Map();
 const client = new Discord.Client();
 const regexPrefix = new RegExp('stiv*');
 const playListPrefix = new RegExp('stiv playlists \\d+');
+const playUrlPrefix = new RegExp('stiv play https:\\/\\/.*');
 let playlists = null;
 let assistant = null;
 
@@ -30,11 +31,15 @@ client.once('disconnect', () => {
 client.on('message', async (msg) => {
 	if (msg.author.bot) return;
 	const serverQueue = queue.get(msg.guild.id);
-
 	if (regexPrefix.test(msg.content)) {
-		if (msg.content.startsWith(`${prefix}play `)) {
-			console.log('play');
-			execute(queue, msg, serverQueue);
+		if (msg.content.startsWith(`${prefix}play `) && playUrlPrefix.test(msg.content)) {
+			console.log('play-url');
+			execute(queue, msg, serverQueue, false);
+			return;
+		}
+		else if (msg.content.startsWith(`${prefix}play `)) {
+			console.log('play-name');
+			execute(queue, msg, serverQueue, true);
 			return;
 		}
 		else if (msg.content.startsWith(`${prefix}skip`)) {
