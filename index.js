@@ -104,7 +104,7 @@ client.on('message', async (msg) => {
 			console.log('resume');
 			resumeSong(queue, msg);
 		}
-		else {
+		else if(msg.content.startsWith(`${prefix} `)) {
 			console.log('assistant');
 			const text = await callAssistant(msg.content.substring(4), assistant, assistantWatsonId);
 			if(text) {
