@@ -32,6 +32,8 @@
     "help_change_volume_value": "Used to change current song volume.",
     "help_playlists_label": "__stiv playlists__",
     "help_playlists_value": "Used to display playlists",
+    "help_songs_label": "__stiv songs <playlist_number>__",
+    "help_songs_value": "Used to display songs in a playlist.",
     "help_playlists_number_label": "__stiv playlists <number>__",
     "help_playlists_number_value": "Used to play a certain playlist.",
     "help_queue_label": "__stiv queue__",

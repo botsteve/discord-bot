@@ -125,6 +125,7 @@ const displayHelp = function displayHelp(message) {
 		.addField(translate.help_current_volume_label, translate.help_current_volume_value)
 		.addField(translate.help_change_volume_label, translate.help_change_volume_value)
 		.addField(translate.help_playlists_label, translate.help_playlists_value)
+		.addField(translate.help_songs_label, translate.help_songs_value)
 		.addField(translate.help_playlists_number_label, translate.help_playlists_number_value)
 		.addField(translate.help_playlist_create_label, translate.help_playlist_create_value)
 		.addField(translate.help_add_song_label, translate.help_add_song_value)
@@ -232,6 +233,13 @@ const obtainPlaylists = async function obtainPlaylists() {
 	return playlists;
 };
 
+const displayPlaylistsSongs = async function displayPlaylistsSongs(playlists, message) {
+	const channelMessage = await parseSongs(playlists, message);
+	if(channelMessage) {
+		return message.channel.send(channelMessage);
+	}
+};
+
 const displayPlaylists = async function displayPlaylists(playlists, message) {
 	const channelMessage = await parsePlaylists(playlists, message);
 	if(channelMessage) {
@@ -248,11 +256,23 @@ async function parsePlaylists(playlists, serverMessage) {
 	}
 	else{
 		for(let i = 0;i < playlists.length;i++) {
-			message.addField(`[${[i]}].__**${playlists[i].playlistName}**__`, '\u200b', true);
-			for(let j = 0;j < playlists[i].songs.length;j++) {
-				message.addField(`\t [${[j]}].**${playlists[i].songs[j].title}**`, `${playlists[i].songs[j].url}`);
-			}
-			message.addField('\u200b', '\u200b');
+			message.addField(`[${[i]}].__**${playlists[i].playlistName}**__`, '\u200b');
+		}
+		return message;
+	}
+}
+
+async function parseSongs(playlists, serverMessage) {
+	const playlistIndex = serverMessage.content.split(' ')[2];
+	const message = new Discord.MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle(`__**PLAYLISTS ${playlists[playlistIndex].playlistName} SONGS**__`);
+	if(!playlists) {
+		serverMessage.channel.send(translate.wait_for_load);
+	}
+	else{
+		for(let i = 0;i < playlists[playlistIndex].songs.length;i++) {
+			message.addField(`[${[i]}].__**${playlists[playlistIndex].songs[i].title}**__`, `${playlists[playlistIndex].songs[i].url}`);
 		}
 		return message;
 	}
@@ -384,4 +404,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist, addNewPlaylist };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist, addNewPlaylist, displayPlaylistsSongs };
