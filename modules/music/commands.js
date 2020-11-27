@@ -8,6 +8,17 @@ function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
 }
 
+
+const addNewPlaylist = async function addNewPlaylist(playlists, message) {
+	const playlistName = message.content.split(' ')[2];
+	if(playlists && isNaN(playlistName)) {
+		message.channel.send(`Finished adding a new playlist with the name ${playlistName}`);
+		const playlistConstruct = { playlistName: playlistName, songs: [] };
+		playlists.push(playlistConstruct);
+		await openFileAndWrite(JSON.stringify(playlists, null, 2));
+	}
+};
+
 const removeSongFromPlaylist = async function removeSongFromPlaylist(playlists, message) {
 	const songNumber = message.content.split(' ')[3];
 	const playlistNumber = message.content.split(' ')[2];
@@ -84,6 +95,7 @@ const displayHelp = function displayHelp(message) {
 		.addField(translate.help_change_volume_label, translate.help_change_volume_value)
 		.addField(translate.help_playlists_label, translate.help_playlists_value)
 		.addField(translate.help_playlists_number_label, translate.help_playlists_number_value)
+		.addField(translate.help_playlist_create_label, translate.help_playlist_create_value)
 		.addField(translate.help_add_song_label, translate.help_add_song_value)
 		.addField(translate.help_remove_song_label, translate.help_remove_song_value)
 		.addField(translate.help_queue_label, translate.help_queue_value)
@@ -331,4 +343,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist, addNewPlaylist };
