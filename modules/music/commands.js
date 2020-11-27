@@ -62,8 +62,13 @@ async function openFileAndWrite(content) {
 const pauseSong = function pauseSong(queue, message) {
 	const serverSongQueue = queue.get(message.guild.id);
 	if(serverSongQueue) {
-		serverSongQueue.connection.dispatcher.pause();
-		message.channel.send(translate.pause);
+		try{
+			serverSongQueue.connection.dispatcher.pause();
+			message.channel.send(translate.pause);
+		}
+		catch(errr) {
+			message.channel.send(translate.no_song);
+		}
 	}
 	else{
 		message.channel.send(translate.no_song);
@@ -73,8 +78,13 @@ const pauseSong = function pauseSong(queue, message) {
 const resumeSong = function resumeSong(queue, message) {
 	const serverSongQueue = queue.get(message.guild.id);
 	if(serverSongQueue) {
-		serverSongQueue.connection.dispatcher.resume();
-		message.channel.send(translate.resume);
+		try{
+			serverSongQueue.connection.dispatcher.resume();
+			message.channel.send(translate.resume);
+		}
+		catch(errr) {
+			message.channel.send(translate.no_song);
+		}
 	}
 	else{
 		message.channel.send(translate.no_song);
