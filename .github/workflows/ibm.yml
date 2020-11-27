@@ -14,13 +14,12 @@ on: workflow_dispatch
 env:
   GITHUB_SHA: ${{ github.sha }}
   IBM_CLOUD_API_KEY: ${{ secrets.IBM_CLOUD_API_KEY }}
-  IBM_CLOUD_REGION: us-south
+  IBM_CLOUD_REGION: eu-de
   ICR_NAMESPACE: ${{ secrets.ICR_NAMESPACE }}
-  REGISTRY_HOSTNAME: us.icr.io
-  IMAGE_NAME: iks-test
-  IKS_CLUSTER: example-iks-cluster-name-or-id
-  DEPLOYMENT_NAME: iks-test
-  PORT: 5001
+  REGISTRY_HOSTNAME: de.icr.io
+  IMAGE_NAME: discord-bot
+  IKS_CLUSTER: buvtia3f0u5ijt9jcrt0
+  DEPLOYMENT_NAME: discord-bot
 
 jobs:
   setup-build-publish-deploy:
@@ -50,9 +49,7 @@ jobs:
     # Build the Docker image
     - name: Build with Docker
       run: |
-        docker build -t "$REGISTRY_HOSTNAME"/"$ICR_NAMESPACE"/"$IMAGE_NAME":"$GITHUB_SHA" \
-          --build-arg GITHUB_SHA="$GITHUB_SHA" \
-          --build-arg GITHUB_REF="$GITHUB_REF" .
+        docker build -t "$REGISTRY_HOSTNAME"/"$ICR_NAMESPACE"/"$IMAGE_NAME":"$GITHUB_SHA" \ .
 
     # Push the image to IBM Container Registry
     - name: Push the image to ICR
@@ -67,6 +64,3 @@ jobs:
         kubectl create deployment $DEPLOYMENT_NAME --image=$REGISTRY_HOSTNAME/$ICR_NAMESPACE/$IMAGE_NAME:$GITHUB_SHA --dry-run -o yaml > deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl rollout status deployment/$DEPLOYMENT_NAME
-        kubectl create service loadbalancer $DEPLOYMENT_NAME --tcp=80:$PORT --dry-run -o yaml > service.yaml
-        kubectl apply -f service.yaml
-        kubectl get services -o wide
