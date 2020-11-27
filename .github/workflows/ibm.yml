@@ -8,7 +8,14 @@
 
 name: Build and Deploy to IKS
 
-on: workflow_dispatch
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
+    branches:
+      - main
+  # Also trigger on page_build, as well as release created events
+
 
 # Environment variables available to all jobs and steps in this workflow
 env:
