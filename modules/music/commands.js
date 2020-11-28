@@ -206,16 +206,13 @@ const playPlaylist = async function playPlaylist(playlists, queue, message) {
 			return message.channel.send(err);
 		}
 	}
+	else if(playlistNumber <= playlists.length || !isNaN(playlistNumber)) {
+		message.channel.send(translate.changing_playlist);
+		serverSongQueue.songs = [...playlists[playlistNumber].songs];
+		await play(queue, message.guild, serverSongQueue.songs[0]);
+	}
 	else{
-		if(playlistNumber <= playlists.length || !isNaN(playlistNumber)) {
-			message.channel.send(translate.changing_playlist);
-			serverSongQueue.songs = [...playlists[playlistNumber].songs];
-			await play(queue, message.guild, serverSongQueue.songs[0]);
-		}
-		else{
-			message.channel.send(translate.invalid_playlist_number);
-		}
-		console.log(serverSongQueue.songs);
+		message.channel.send(translate.invalid_playlist_number);
 	}
 };
 
