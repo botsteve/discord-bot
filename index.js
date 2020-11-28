@@ -1,12 +1,13 @@
 const Discord = require('discord.js');
 const { prefix, assistantWatsonId, discordToken } = require('./config.json');
-const { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addSongToPlaylist, removeSongFromPlaylist, addNewPlaylist, displayPlaylistsSongs } = require('./modules/music/commands');
+const { execute, skip, stop, currentSong, currentVolume, changeVolume, addSongToPlaylist, removeSongFromPlaylist, displayPlaylistsSongs } = require('./modules/music/commands');
+const {	obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addNewPlaylist } = require('./modules/music/commands');
 const translate = require('./modules/translate/en.json');
 const { authWatsonAndGetService, callAssistant } = require('./modules/watson/watson');
 
 const queue = new Map();
 const client = new Discord.Client();
-const regexPrefix = new RegExp('stiv*');
+const regexPrefix = new RegExp('stiv ');
 const playListPrefix = new RegExp('stiv playlists \\d+');
 const playUrlPrefix = new RegExp('stiv play https:\\/\\/.*');
 let playlists = null;
@@ -104,7 +105,7 @@ client.on('message', async (msg) => {
 			console.log('resume');
 			resumeSong(queue, msg);
 		}
-		else if(msg.content.startsWith(`${prefix} `)) {
+		else if(msg.content.startsWith(`${prefix}`)) {
 			console.log('assistant');
 			const text = await callAssistant(msg.content.substring(4), assistant, assistantWatsonId);
 			if(text) {

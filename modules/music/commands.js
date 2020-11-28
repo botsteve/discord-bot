@@ -74,6 +74,7 @@ const addSongToPlaylist = async function addSongToPlaylist(playlists, message) {
 async function openFileAndWrite(content) {
 	try {
 		await fs.writeFile('./modules/playlists/playlists.json', content);
+		console.log('Finished writing playlist to file!');
 	}
 	catch (error) {
 		console.error(`Got an error trying to write to a file: ${error.message}`);
@@ -229,7 +230,8 @@ const obtainPlaylists = async function obtainPlaylists() {
 			}
 		}
 	}
-
+	console.log('Finished loading video titles from playlists!');
+	await openFileAndWrite(JSON.stringify(playlists, null, 2));
 	return playlists;
 };
 
@@ -248,13 +250,13 @@ const displayPlaylists = async function displayPlaylists(playlists, message) {
 };
 
 async function parsePlaylists(playlists, serverMessage) {
-	const message = new Discord.MessageEmbed()
-		.setColor('#0099ff')
-		.setTitle('PLAYLISTS');
+	const message = new Discord.MessageEmbed();
 	if(!playlists) {
 		serverMessage.channel.send(translate.wait_for_load);
 	}
 	else{
+		message.setColor('#0099ff');
+		message.setTitle('PLAYLISTS');
 		for(let i = 0;i < playlists.length;i++) {
 			message.addField(`[${[i]}].__**${playlists[i].playlistName}**__`, '\u200b');
 		}
@@ -264,13 +266,13 @@ async function parsePlaylists(playlists, serverMessage) {
 
 async function parseSongs(playlists, serverMessage) {
 	const playlistIndex = serverMessage.content.split(' ')[2];
-	const message = new Discord.MessageEmbed()
-		.setColor('#0099ff')
-		.setTitle(`__**PLAYLISTS ${playlists[playlistIndex].playlistName} SONGS**__`);
+	const message = new Discord.MessageEmbed();
 	if(!playlists) {
 		serverMessage.channel.send(translate.wait_for_load);
 	}
 	else{
+		message.setColor('#0099ff');
+		message.setTitle(`__**PLAYLISTS ${playlists[playlistIndex].playlistName} SONGS**__`);
 		for(let i = 0;i < playlists[playlistIndex].songs.length;i++) {
 			message.addField(`[${[i]}].__**${playlists[playlistIndex].songs[i].title}**__`, `${playlists[playlistIndex].songs[i].url}`);
 		}
