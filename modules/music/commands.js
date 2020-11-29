@@ -15,7 +15,6 @@ async function searchUrlByName(message) {
 	const songName = message.content.substring(10);
 	if(message.content) {
 		const results = await usetube.searchVideo(songName);
-		console.log(results);
 		return await parseUrlFromResults(results);
 	}
 	else{
