@@ -5,6 +5,8 @@ const Discord = require('discord.js');
 const fs = require('fs').promises;
 const usetube = require('usetube');
 
+const COOKIE = 'VISITOR_INFO1_LIVE=LCx9JkXAvZE; CONSENT=YES+RO.ro+20150921-01-0; SID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyxm2jGy9okLBLNDPoRlpl8Q.; __Secure-3PSID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyS1dHlr7xlE-6rEyDWHNHSQ.; HSID=ACR_kubmBssBZAjRM; SSID=AaiYFqRxduNG7ZZNF; APISID=UHxYK6FmQUEuj-5p/ACAp50LV8BTAiIxL7; SAPISID=mSf73XS77bAribdm/ATjzzbs0crAcuPaWt; __Secure-3PAPISID=mSf73XS77bAribdm/ATjzzbs0crAcuPaWt; LOGIN_INFO=AFmmF2swRgIhAKJQwQGAEAvX_tuOFBRVnJwijoHesSj08JN6kCy6NJEeAiEA_OLDAIZXl6GMe7YEJy3eVuONXDt-o_kZFuo999c8EhA:QUQ3MjNmeGZ3X193U2ZHV2lrU3pXVDMwaEYxZzdWWXYwcmxjcEZJQU4yS0tGam9LM2czZS1qOUhIbGRkcDRNNFk5Zm01TnhDZ0JXdEhSZW9OUWxud1djajhnaEdJcko5U1d0X0hPUkFTeVNGNmZaYmU5MWFBeS12SVpQbzIzYnRxSlpFbmV3TWtsVmZPYTY1UW9pdWg2eVpBdmRVelNDdmhZVE9WeTJOV21rS0RSSnhIWGJJTWl3; SIDCC=AJi4QfEpn18eFscoZV4925WjZNie2hGqS5GYN9xIyjJ3jEVLjk5K2NrzMAxnfSo8dQ2V7yXx5Q; __Secure-3PSIDCC=AJi4QfGs8by2mX8x9u6cQuZjzmu82HWYymn1EvSeOSOhG2rx-zvImp8mNntxbe15cXDcROZzUxo; PREF=al=ro; wide=0; YSC=RG419eYwqKU';
+
 function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
 }
@@ -13,6 +15,7 @@ async function searchUrlByName(message) {
 	const songName = message.content.substring(10);
 	if(message.content) {
 		const results = await usetube.searchVideo(songName);
+		console.log(results);
 		return await parseUrlFromResults(results);
 	}
 	else{
@@ -393,7 +396,12 @@ function play(queue, guild, song) {
 		return;
 	}
 	const dispatcher = serverQueue.connection
-		.play(ytdl(song.url, { filter: 'audioonly' }))
+		.play(ytdl(song.url, {
+			requestOptions: {
+				filter: 'audioonly',
+				headers: { cookie: COOKIE },
+			},
+		}))
 		.on('finish', () => {
 			serverQueue.songs.shift();
 			play(queue, guild, serverQueue.songs[0]);
