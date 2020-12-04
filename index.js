@@ -105,6 +105,12 @@ client.on('message', async (msg) => {
 			console.log('resume');
 			resumeSong(queue, msg);
 		}
+		// else if(msg.content.startsWith(`${prefix}authorize`)) {
+		// 	console.log('auth');
+		// 	const role = msg.guild.roles.cache.find(e => e.name === 'Reprezentant la GOLF');
+		// 	const member = msg.mentions.members.first();
+		// 	member.roles.add(role);
+		// }
 		else if(msg.content.startsWith(`${prefix}`)) {
 			console.log('assistant');
 			const text = await callAssistant(msg.content.substring(4), assistant, assistantWatsonId);

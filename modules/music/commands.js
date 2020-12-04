@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 const fs = require('fs').promises;
 const usetube = require('usetube');
 
-const COOKIE = 'SID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyxm2jGy9okLBLNDPoRlpl8Q.; HSID=ACR_kubmBssBZAjRM; SSID=AaiYFqRxduNG7ZZNF';
+// const COOKIE = 'NID=204=BlYWvOYiICNwQWycs-zeYvSVaMjg3owlCOYWcCLU_4tCKitaOr8Net3f1KdkAtAZonYhgWAouKuaxuQo-eEX_wmOwBT62fKn1Jpom8XxAxYR8ozdof4QzUJ5QM2VIMPs0rYmi6Cwbe_oOY9ZjDFP9Ul3FPKMLenIWRzGs9vxiSSlWWBrY8s7OLeZwhsnhadKgkVXQluB2d2eU7YZd3T67dmPORK-uRiDK4DVmb7c0EaUWMeH7VW78uCX8aE; CONSENT=YES+RO.ro+20150921-01-0; SID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyxm2jGy9okLBLNDPoRlpl8Q.; __Secure-3PSID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyS1dHlr7xlE-6rEyDWHNHSQ.; HSID=ARSsvrAwiJFPiGoY9; SSID=AxeIn9nElDQt_kny-; APISID=UHxYK6FmQUEuj-5p/ACAp50LV8BTAiIxL7; SAPISID=mSf73XS77bAribdm/ATjzzbs0crAcuPaWt; __Secure-3PAPISID=mSf73XS77bAribdm/ATjzzbs0crAcuPaWt; SIDCC=AJi4QfGY19b820AjrkfvRNrZ8dPdkcwo3HktBgFgRWqW4fpcC3-M9lY5-U_5SSMULbGiVMh1gA; __Secure-3PSIDCC=AJi4QfGVzdikTgaLmjQCrgVA9mWxAmYVQsaneJOmMHN-VDrPm9ZjNLNd-y209BmzNiFyUAnaqw; 1P_JAR=2020-11-30-16; OGPC=19021554-1:';
 
 function hasPermissionToJoinOrSpeak(permissions) {
 	return !permissions.has('CONNECT') || !permissions.has('SPEAK');
@@ -15,6 +15,7 @@ async function searchUrlByName(message) {
 	const songName = message.content.substring(10);
 	if(message.content) {
 		const results = await usetube.searchVideo(songName);
+		console.log(results);
 		return await parseUrlFromResults(results);
 	}
 	else{
@@ -183,7 +184,11 @@ const playPlaylist = async function playPlaylist(playlists, queue, message) {
 		return message.channel.send(translate.channel_permissions_error);
 	}
 
-	if(playlistNumber == null || playlistNumber == undefined) {
+	if(!playlists) {
+		return message.channel.send(translate.wait_for_load);
+	}
+
+	if(playlistNumber == null || playlistNumber == undefined || playlistNumber >= playlists.length) {
 		return message.channel.send(translate.playlist_number_error);
 	}
 
@@ -395,12 +400,7 @@ function play(queue, guild, song) {
 		return;
 	}
 	const dispatcher = serverQueue.connection
-		.play(ytdl(song.url, {
-			requestOptions: {
-				filter: 'audioonly',
-				headers: { cookie: COOKIE },
-			},
-		}))
+		.play(ytdl(song.url, { filter: format => format.container === 'mp4' }))
 		.on('finish', () => {
 			serverQueue.songs.shift();
 			play(queue, guild, serverQueue.songs[0]);
