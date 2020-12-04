@@ -10,6 +10,7 @@
     "wait_for_load": "Waiting for BOT to finish bootstraping files. Please Wait!",
     "bootstraping_completed": "Bootstraping is completed",
     "changing_playlist": "Changing playlist!",
+    "changing_manea": "PLAI O MANIEA!",
     "invalid_playlist_number": "Invalid playlist number!",
     "pause": "The current song has been pause!",
     "resume": "The current song has been resumed!",

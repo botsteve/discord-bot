@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const { prefix, assistantWatsonId, discordToken } = require('./config.json');
 const { execute, skip, stop, currentSong, currentVolume, changeVolume, addSongToPlaylist, removeSongFromPlaylist, displayPlaylistsSongs } = require('./modules/music/commands');
-const {	obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addNewPlaylist } = require('./modules/music/commands');
+const {	obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, resumeSong, pauseSong, addNewPlaylist, playManea } = require('./modules/music/commands');
 const translate = require('./modules/translate/en.json');
 const { authWatsonAndGetService, callAssistant } = require('./modules/watson/watson');
 
@@ -104,6 +104,10 @@ client.on('message', async (msg) => {
 		else if(msg.content.startsWith(`${prefix}resume`)) {
 			console.log('resume');
 			resumeSong(queue, msg);
+		}
+		else if(msg.content.startsWith(`${prefix}puneo maniea`)) {
+			console.log('puneo-maniea');
+			playManea(playlists, queue, msg);
 		}
 		// else if(msg.content.startsWith(`${prefix}authorize`)) {
 		// 	console.log('auth');

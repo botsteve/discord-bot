@@ -15,7 +15,9 @@ async function searchUrlByName(message) {
 	const songName = message.content.substring(10);
 	if(message.content) {
 		const results = await usetube.searchVideo(songName);
-		console.log(results);
+		if(!results) {
+			return message.channel.send(translate.no_song_found);
+		}
 		return await parseUrlFromResults(results);
 	}
 	else{
@@ -113,6 +115,49 @@ const resumeSong = function resumeSong(queue, message) {
 	}
 	else{
 		message.channel.send(translate.no_song);
+	}
+};
+
+const playManea = async function playManea(playlists, queue, message) {
+	const serverSongQueue = queue.get(message.guild.id);
+
+	const voiceChannel = message.member.voice.channel;
+
+	if (!voiceChannel) {
+		return message.channel.send(translate.voice_channel_error);
+	}
+
+	const permissions = voiceChannel.permissionsFor(message.client.user);
+	if (hasPermissionToJoinOrSpeak(permissions)) {
+		return message.channel.send(translate.channel_permissions_error);
+	}
+
+	if(!playlists) {
+		return message.channel.send(translate.wait_for_load);
+	}
+
+	const randomManea = Math.floor(Math.random() * playlists[0].songs.length);
+
+	if (!serverSongQueue) {
+		const queueContruct = {
+			textChannel: message.channel,
+			voiceChannel: voiceChannel,
+			connection: null,
+			songs: Array.of(playlists[0].songs[randomManea]),
+			volume: 5,
+			playing: true,
+		};
+		queue.set(message.guild.id, queueContruct);
+		try {
+			const connection = await voiceChannel.join();
+			queueContruct.connection = connection;
+			play(queue, message.guild, queueContruct.songs[0]);
+		}
+		catch (err) {
+			console.log(err);
+			queue.delete(message.guild.id);
+			return message.channel.send(err);
+		}
 	}
 };
 
@@ -225,15 +270,15 @@ const playPlaylist = async function playPlaylist(playlists, queue, message) {
 
 const obtainPlaylists = async function obtainPlaylists() {
 	const playlists = savedPlaylists;
-	if(playlists) {
-		for(let i = 0;i < playlists.length;i++) {
-			for(let j = 0;j < playlists[i].songs.length;j++) {
-				const song = playlists[i].songs[j];
-				const songInfo = await ytdl.getInfo(song.url);
-				playlists[i].songs[j].title = songInfo.videoDetails.title;
-			}
-		}
-	}
+	// if(playlists) {
+	// 	for(let i = 0;i < playlists.length;i++) {
+	// 		for(let j = 0;j < playlists[i].songs.length;j++) {
+	// 			const song = playlists[i].songs[j];
+	// 			const songInfo = await ytdl.getInfo(song.url);
+	// 			playlists[i].songs[j].title = songInfo.videoDetails.title;
+	// 		}
+	// 	}
+	// }
 	console.log('Finished loading video titles from playlists!');
 	await openFileAndWrite(JSON.stringify(playlists, null, 2));
 	return playlists;
@@ -410,4 +455,4 @@ function play(queue, guild, song) {
 	serverQueue.textChannel.send(`Start playing: **${song.title}**`);
 }
 
-module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist, addNewPlaylist, displayPlaylistsSongs };
+module.exports = { execute, skip, stop, currentSong, currentVolume, changeVolume, obtainPlaylists, displayPlaylists, playPlaylist, displayQueue, displayHelp, pauseSong, resumeSong, addSongToPlaylist, removeSongFromPlaylist, addNewPlaylist, displayPlaylistsSongs, playManea };
