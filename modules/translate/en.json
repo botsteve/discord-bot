@@ -47,8 +47,8 @@
     "help_pause_value": "Used to pause the current song.",
     "help_add_song_label": "__stiv playlist-add <url> <playlist_number>__",
     "help_add_song_value": "Used to add a song to a certain playlist.",
-    "help_remove_song_label": "__stiv playlist-remove <playlis> <playlist_number>__",
-    "help_remove_song_value": "Used to add a song to a certain playlist.",
+    "help_remove_song_label": "__stiv playlist-remove <playlist_number> <playlist_song_number>__",
+    "help_remove_song_value": "Used to remove a song from a certain playlist.",
     "help_playlist_create_label": "__stiv playlist-create <playlist_name>__",
     "help_playlist_create_value": "Used to create a new playlist."
 }
