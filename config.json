@@ -8,5 +8,6 @@
   "discordToken": "NzgwODAxODA1NDI4NzE5NjE2.X70YWQ.SwU1g-M9oaI5yIVa40pqFN0pCOI",
   "assistantApiVersion": "2020-11-24",
   "assistantWatsonId": "b19dff02-97b1-43ab-828e-104c78fd053f",
-  "prefix": "stiv "
+  "prefix": "stiv ",
+  "google_api": "AIzaSyDxNrQwi-Q0M-2E_sXozHZL1HjS4BQkHwE"
 }

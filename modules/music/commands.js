@@ -3,7 +3,9 @@ const translate = require('../translate/en.json');
 const savedPlaylists = require('../playlists/playlists.json');
 const Discord = require('discord.js');
 const fs = require('fs').promises;
-const usetube = require('usetube');
+const YouTube = require('discord-youtube-api');
+const { google_api } = require('../../config.json');
+const youtube = new YouTube(google_api);
 
 // const COOKIE = 'NID=204=BlYWvOYiICNwQWycs-zeYvSVaMjg3owlCOYWcCLU_4tCKitaOr8Net3f1KdkAtAZonYhgWAouKuaxuQo-eEX_wmOwBT62fKn1Jpom8XxAxYR8ozdof4QzUJ5QM2VIMPs0rYmi6Cwbe_oOY9ZjDFP9Ul3FPKMLenIWRzGs9vxiSSlWWBrY8s7OLeZwhsnhadKgkVXQluB2d2eU7YZd3T67dmPORK-uRiDK4DVmb7c0EaUWMeH7VW78uCX8aE; CONSENT=YES+RO.ro+20150921-01-0; SID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyxm2jGy9okLBLNDPoRlpl8Q.; __Secure-3PSID=3QcHEme6IXoPX9rVRl9zKpqqjapARffaUSFZ9qMVlq9ihYNyS1dHlr7xlE-6rEyDWHNHSQ.; HSID=ARSsvrAwiJFPiGoY9; SSID=AxeIn9nElDQt_kny-; APISID=UHxYK6FmQUEuj-5p/ACAp50LV8BTAiIxL7; SAPISID=mSf73XS77bAribdm/ATjzzbs0crAcuPaWt; __Secure-3PAPISID=mSf73XS77bAribdm/ATjzzbs0crAcuPaWt; SIDCC=AJi4QfGY19b820AjrkfvRNrZ8dPdkcwo3HktBgFgRWqW4fpcC3-M9lY5-U_5SSMULbGiVMh1gA; __Secure-3PSIDCC=AJi4QfGVzdikTgaLmjQCrgVA9mWxAmYVQsaneJOmMHN-VDrPm9ZjNLNd-y209BmzNiFyUAnaqw; 1P_JAR=2020-11-30-16; OGPC=19021554-1:';
 
@@ -14,7 +16,7 @@ function hasPermissionToJoinOrSpeak(permissions) {
 async function searchUrlByName(message) {
 	const songName = message.content.substring(10);
 	if(message.content) {
-		const results = await usetube.searchVideo(songName);
+		const results = await youtube.searchVideos(songName);
 		if(!results) {
 			return message.channel.send(translate.no_song_found);
 		}
@@ -28,8 +30,8 @@ async function searchUrlByName(message) {
 
 async function parseUrlFromResults(videos) {
 	let url = '';
-	if(videos.tracks.length) {
-		url = `https://www.youtube.com/watch?v=${videos.tracks[0].id}`;
+	if(videos) {
+		url = `https://www.youtube.com/watch?v=${videos.id}`;
 	}
 	return url;
 }
