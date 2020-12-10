@@ -272,15 +272,17 @@ const playPlaylist = async function playPlaylist(playlists, queue, message) {
 
 const obtainPlaylists = async function obtainPlaylists() {
 	const playlists = savedPlaylists;
-	// if(playlists) {
-	// 	for(let i = 0;i < playlists.length;i++) {
-	// 		for(let j = 0;j < playlists[i].songs.length;j++) {
-	// 			const song = playlists[i].songs[j];
-	// 			const songInfo = await ytdl.getInfo(song.url);
-	// 			playlists[i].songs[j].title = songInfo.videoDetails.title;
-	// 		}
-	// 	}
-	// }
+	if(playlists) {
+		for(let i = 0;i < playlists.length;i++) {
+			for(let j = 0;j < playlists[i].songs.length;j++) {
+				const song = playlists[i].songs[j];
+				if(!song.title) {
+					const songInfo = await ytdl.getInfo(song.url);
+					playlists[i].songs[j].title = songInfo.videoDetails.title;
+				}
+			}
+		}
+	}
 	console.log('Finished loading video titles from playlists!');
 	await openFileAndWrite(JSON.stringify(playlists, null, 2));
 	return playlists;
