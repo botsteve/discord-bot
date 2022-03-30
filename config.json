@@ -1,13 +1,13 @@
 {
-  "apikey": "F4FYnh19vemaU7T7kKCPrXSDSx5m52QK75L2uEZYzjBc",
-  "iam_apikey_description": "Auto-generated for key 8e452da3-1f14-41c3-9485-3fa17b1c53d0",
+  "apikey": "",
+  "iam_apikey_description": "",
   "iam_apikey_name": "Auto-generated service credentials",
   "iam_role_crn": "crn:v1:bluemix:public:iam::::serviceRole:Manager",
   "iam_serviceid_crn": "crn:v1:bluemix:public:iam-identity::a/656884e85c224211bb5de1974530b3cc::serviceid:ServiceId-21850b2c-dfbf-42c4-97f6-9d0b39abe164",
   "apiUrl": "https://api.eu-gb.assistant.watson.cloud.ibm.com/instances/6b5f184f-0d2c-4f2f-abdc-ec863c578b79",
-  "discordToken": "NzgwODAxODA1NDI4NzE5NjE2.X70YWQ.SwU1g-M9oaI5yIVa40pqFN0pCOI",
+  "discordToken": "",
   "assistantApiVersion": "2020-11-24",
-  "assistantWatsonId": "b19dff02-97b1-43ab-828e-104c78fd053f",
+  "assistantWatsonId": "",
   "prefix": "stiv ",
-  "google_api": "AIzaSyDxNrQwi-Q0M-2E_sXozHZL1HjS4BQkHwE"
+  "google_api": ""
 }
